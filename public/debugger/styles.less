@@ -1,0 +1,95 @@
+body, input { font-family: Verdana; font-size: 14px; }
+
+.fr { float: right; }
+.fl { float: left; }
+
+.items { width: 320px; height: 480px; border: 10px solid #555; overflow: auto; }
+.items.centered { margin: 50px auto; }
+
+.item { 
+	margin-bottom: 5px; 
+	background: #eee;
+	padding: 10px;
+	overflow: hidden;
+	&.expandable { 
+		background: #fff;
+		padding: 0;
+		.preview { 
+			position: relative;
+			cursor: pointer;
+			background: #eee;
+			&:hover {
+				background: #e2e2e2;
+			}
+			> * {
+				padding: 10px;
+			}
+			.btn {
+				padding-left: 14px;
+				padding-right: 14px;
+				border-left: 1px solid #ddd;
+			}
+			.btn:hover {
+				background: #ccc;
+			}
+			.name {
+				padding: 0px; 
+			}
+			.type {
+				font-size: 13px;
+				color: #aaa;
+			}
+		}
+		.view {
+
+		}
+	}
+	
+}
+
+.app {
+	height: 100%;
+}
+
+.properties {
+	padding: 8px 0px;
+	.item { margin: 5px 10px; }
+	border: 3px solid #eee;
+	border-top: none;
+}
+.property {
+	font-size: 12px;
+	padding: 2px 10px 5px;
+	margin-bottom: 2px;
+	.name {
+		font-weight: bold;
+	}
+	.type {
+		color: #aaa;
+	}
+	.value {
+		float: right;
+	}
+	.border { 
+		height: 1px;
+		margin-top: 4px;
+		background: #eee;
+		clear: both;
+	}
+
+	&.string {
+		.value {
+			color: #00006F;	
+		}
+	}
+	&.number {
+		.value {
+			color: #008400;	
+		}
+	}
+	&.boolean {
+		.value {
+			color: #840000;	
+		}
+	}
+}

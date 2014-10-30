@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<title>Insert title here</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+	<script src="../js/underscore.js"></script>
+	<script src="log.js"></script>
+	<link rel="stylesheet" href="log.css">
+	<script>
+		/* $(document).ready(function(){
+			$('.mpl-item').each(function(){
+				var $self = $(this),
+					$title = $self.children('.mpl-titlebar'),
+					$contentWrap = $self.children('.mpl-content-wrap'),
+					$children = $contentWrap.children('.mpl-children');
+
+				$title.click(function(){
+					$contentWrap.slideToggle();
+				});
+			});
+		}); */
+	</script>
+
+	<script type="text/template" id="wydgyt1-template">
+		<div class="wydgyt1" contenteditable="false">
+			<h1 data-twyg>This is a Wydgyt 1</h1>
+			<ul>
+				<li><span>1</span><span>Its going to be a simple list</span></li>
+			</ul>
+		</div>
+	</script>
+	<script type="text/template" id="j-logger-template">
+		<div class="j-logger"></div>
+	</script>
+	<script type="text/template" id="j-log-item-template">
+		<div class="wpx-item j-log-item wpx-item-big">
+			<div class="j-log-item-title wpx-item-preview"></div>
+			<div class="j-log-item-content wpx-item-content"></div>
+		</div>
+	</script>
+	<script type="text/template" id="mpl-item-template">
+		<div class="mpl-item">
+			<div class="mpl-line"></div>
+			<div class="mpl-titlebar">
+				<div class="mpl-icon"></div><div class="mpl-title"></div>
+			</div>
+			<div class="mpl-content-wrap">
+				<div class="mpl-content"></div>
+				<div class="mpl-children"></div>
+			</div>
+		</div>
+	</script>
+	<script type="text/template" id="j-log-file-wrap-template">
+		<div class="j-log-file">
+			<div class="j-log-file-title"></div>
+			<div class="j-log-file-content"></div>
+		</div>
+	</script>
+	<style>
+		* { padding: 0; margin: 0; }
+		.blocks { list-style: none; }
+		.blocks li { height: 30px; width: 30px; background: orange; float: left; margin-right: 5px; }
+
+		.clear { clear: both; }
+	</style>
+</head>
+<body>
+<div class="mpl-item mpl-group">
+	<div class="mpl-line">123</div>
+	<div class="mpl-titlebar" data-target='.mpl-content-wrap'>
+		<div class="mpl-icon">X</div><div class="mpl-title">Title</div>
+	</div>
+	<div class="mpl-content-wrap">
+		<div class="mpl-content">Content</div>
+		<div class="mpl-children">
+			<div class="j-log-file">
+				<div class="j-log-file-title" data-target='.j-log-file-content'>file.js</div>
+				<div class="j-log-file-content">
+					<div class="mpl-item">
+						<div class="mpl-line">123</div>
+						<div class="mpl-titlebar" data-target='.mpl-content-wrap'>
+							<div class="mpl-title">
+								<div class="mpl-title">
+									<span class="mpl-var" title="string"><span class="mpl-name">title: </span><span class="mpl-value">&nbsp;"Hmmm"</span></span><span class="mpl-type"></span>
+								</div>
+							</div>
+						</div>
+						<div class="mpl-content-wrap">
+							<div class="mpl-content">Content</div>
+							<div class="mpl-children">Children</div>
+						</div>
+					</div>
+					<div class="mpl-item">
+						<div class="mpl-line">123</div>
+						<div class="mpl-titlebar" data-target='.mpl-content-wrap'>
+							<div class="mpl-title">Title</div>
+						</div>
+						<div class="mpl-content-wrap">
+							<div class="mpl-content">Content</div>
+							<div class="mpl-children">Children</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="mpl-item">
+	<div class="mpl-line">123</div>
+	<div class="mpl-titlebar" data-target='.mpl-content-wrap'>
+		<div class="mpl-icon">X</div><div class="mpl-title">Title</div>
+	</div>
+	<div class="mpl-content-wrap">
+		<div class="mpl-content">Content</div>
+		<div class="mpl-children">Children</div>
+	</div>
+</div>
+<h1>Take 2</h1>
+<style>
+	body { font-family: Open Sans; }
+	.item-list { font-size: 12px; }
+	.item-list > .item {  }
+
+	.logger { position: absolute; width: 50%; }
+	.logger > .view { overflow-y: scroll; position: absolute; top: 15px; bottom: 0; left: 0; right: 0; }
+
+	.item {
+		/* FORMATTING - NECESSARY FOR STRUCTURE */
+
+		/* DEFAULT STYLING - OVERRIDE THESE WITH THEMES */
+
+		font-size: 12px;
+		padding: 3px 6px;
+		background: #dedede; color: #333;
+		border-top: 1px solid rgba(255,255,255,0.25);
+		border-left: 1px solid rgba(255,255,255,0.25);
+		border-bottom: 1px solid rgba(0,0,0,0.1);
+		border-right: 1px solid rgba(0,0,0,0.1);
+	}
+	.item:hover { }
+	.item > .preview { cursor: pointer; }
+	.item > .view { display: none; }
+	.item.no-padding { padding: 0; }
+
+	/* THEMES */
+	.line.item { background: transparent; }
+
+	.dark.item { background:#555; color: #fff; }
+	.darker.item { background:#444; color: #fff; }
+
+	.expandable { padding: 0; }
+	.expandable > .preview { padding: 3px 6px; }
+	.expandable > .view { padding: 3px 6px;}
+	.item > .view > .table { width: 100%; padding: 2px 0 0 ; }
+
+
+	.table-row-name, .line-number-col { font-size: 10px; color: #a5a5a5; width: 1px; padding-right: 5px; text-align: right; }
+	.array > .view > .table > .tr > .table-row-name { vertical-align: middle; }
+	.array.item > .view { padding-left: 20px; }
+
+	.table { display: table; }
+	.tr { display: table-row; }
+	.td { display: table-cell; }
+
+	.item-list.padded {  border: 15px solid #eee;  }
+</style>
+<script type="html">
+	<div class="item">
+		<div class="preview"></div>
+		<div class="view"></div>
+	</div>
+</script>
+<div class="item-list padded default">
+	<div class="item dark">Item with NOTHING</div>
+	<div class="item">
+		<div class="preview">Item with PREVIEW and VIEW</div>
+		<div class="view">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec mi convallis, suscipit massa eget, condimentum nisi. Etiam interdum luctus nisi. Vestibulum pulvinar hendrerit pharetra. In hac habitasse platea dictumst. Aliquam nec urna eget lorem ultricies sagittis. Vivamus pulvinar urna vel nisl facilisis, ac pharetra dolor sodales. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ut ante enim.</div>
+	</div>
+	<div class="file item dark">
+		<div class="preview"><div class="file-name">file.js</div></div>
+		<div class="view">
+			<div class="table"><!-- Can't put slideToggle (.view) on a .table, so they have to be separate -->
+				<div class="line tr">
+					<div class="line-number-col td"><div class="line-number">122</div></div>
+					<div class="line-content td">
+						<div class="item">
+							<div class="preview padded">Preview</div>
+							<div class="view padded">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec mi convallis, suscipit massa eget, condimentum nisi. Etiam interdum luctus nisi. Vestibulum pulvinar hendrerit pharetra. In hac habitasse platea dictumst. Aliquam nec urna eget lorem ultricies sagittis. Vivamus pulvinar urna vel nisl facilisis, ac pharetra dolor sodales. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ut ante enim.</div>
+						</div>
+					</div>
+				</div>
+				<div class="line tr">
+					<div class="line-number-col td"><div class="line-number">122</div></div>
+					<div class="line-content td">
+						<div class="item dark">
+							<div class="preview padded">Preview</div>
+							<div class="view padded">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec mi convallis, suscipit massa eget, condimentum nisi. Etiam interdum luctus nisi. Vestibulum pulvinar hendrerit pharetra. In hac habitasse platea dictumst. Aliquam nec urna eget lorem ultricies sagittis. Vivamus pulvinar urna vel nisl facilisis, ac pharetra dolor sodales. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ut ante enim.</div>
+						</div>
+					</div>
+				</div>
+				<div class="line tr">
+					<div class="line-number-col td"><div class="line-number">122</div></div>
+					<div class="line-content td">
+						<div class="item darker">
+							<div class="preview padded">Preview</div>
+							<div class="view padded">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec mi convallis, suscipit massa eget, condimentum nisi. Etiam interdum luctus nisi. Vestibulum pulvinar hendrerit pharetra. In hac habitasse platea dictumst. Aliquam nec urna eget lorem ultricies sagittis. Vivamus pulvinar urna vel nisl facilisis, ac pharetra dolor sodales. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ut ante enim.</div>
+						</div>
+					</div>
+				</div>
+				<div class="line tr">
+					<div class="line-number-col td"><div class="line-number">588</div></div>
+					<div class="line-content td">
+
+							<div class="file item darker">
+								<div class="preview"><div class="file-name">file.js</div></div>
+								<div class="view">
+									<div class="table"><!-- Can't put slideToggle (.view) on a .table, so they have to be separate -->
+										<div class="line tr">
+											<div class="line-number-col td"><div class="line-number">122</div></div>
+											<div class="line-content td">
+												<div class="item">
+													<div class="preview">Preview</div>
+													<div class="view">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec mi convallis, suscipit massa eget, condimentum nisi. Etiam interdum luctus nisi. Vestibulum pulvinar hendrerit pharetra. In hac habitasse platea dictumst. Aliquam nec urna eget lorem ultricies sagittis. Vivamus pulvinar urna vel nisl facilisis, ac pharetra dolor sodales. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ut ante enim.</div>
+												</div>
+											</div>
+										</div>
+										<div class="line tr">
+											<div class="line-number-col td"><div class="line-number">588</div></div>
+											<div class="line-content td">
+												<div class="item">
+													<div class="preview">Preview</div>
+													<div class="view">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec mi convallis, suscipit massa eget, condimentum nisi. Etiam interdum luctus nisi. Vestibulum pulvinar hendrerit pharetra. In hac habitasse platea dictumst. Aliquam nec urna eget lorem ultricies sagittis. Vivamus pulvinar urna vel nisl facilisis, ac pharetra dolor sodales. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ut ante enim.</div>
+												</div>
+											</div>
+										</div>
+										<div class="line tr">
+											<div class="line-number-col td"><div class="line-number">588</div></div>
+											<div class="line-content td">
+
+												<div class="file item dark">
+													<div class="preview"><div class="file-name">file.js</div></div>
+													<div class="view">
+														<div class="table"><!-- Can't put slideToggle (.view) on a .table, so they have to be separate -->
+															<div class="line tr">
+																<div class="line-number-col td"><div class="line-number">122</div></div>
+																<div class="line-content td">
+																	<div class="item">
+																		<div class="preview">Preview</div>
+																		<div class="view">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec mi convallis, suscipit massa eget, condimentum nisi. Etiam interdum luctus nisi. Vestibulum pulvinar hendrerit pharetra. In hac habitasse platea dictumst. Aliquam nec urna eget lorem ultricies sagittis. Vivamus pulvinar urna vel nisl facilisis, ac pharetra dolor sodales. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ut ante enim.</div>
+																	</div>
+																</div>
+															</div>
+															<div class="line tr">
+																<div class="line-number-col td"><div class="dark line-number">588</div></div>
+																<div class="line-content td">
+																	<div class="item">
+																		<div class="preview">Preview</div>
+																		<div class="view">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nec mi convallis, suscipit massa eget, condimentum nisi. Etiam interdum luctus nisi. Vestibulum pulvinar hendrerit pharetra. In hac habitasse platea dictumst. Aliquam nec urna eget lorem ultricies sagittis. Vivamus pulvinar urna vel nisl facilisis, ac pharetra dolor sodales. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ut ante enim.</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+					</div>
+				</div>
+				<div class="tr">Test</div>
+			</div>
+		</div>
+	</div>
+	<div class="file item">
+		<div class="preview">file.js</div>
+		<div class="view">
+			<div class="children">
+
+			</div>
+		</div>
+	</div>
+	<div class="item">Item</div>
+	<div class="item">
+		<ul class="blocks">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<div class="clear"></div>
+	</div>
+	<div class="item">
+		<div class="item-preview">Preview</div>
+		<div class="item-view">View</div>
+	</div>
+	<div class="item">
+		<div class="item-preview">
+			<ul class="blocks">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+		<div class="item-view">
+			<ul class="blocks">
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ul>
+			<div class="clear"></div>
+		</div>
+	</div>
+	<div class="item">
+		<div class="item-preview">Preview</div>
+		<div class="item-view">
+			<div class="item-content">Content</div>
+			<div class="item-children">Children</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

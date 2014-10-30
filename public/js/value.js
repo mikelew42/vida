@@ -18,7 +18,7 @@
 					bindTo.setValue(self.value);
 				});
 				// bindTo --> self
-				bindTo.on('keypress', function(){
+				bindTo.on('keyup', function(){
 					self.value = bindTo.getValue();
 				});
 				// start synced? but which way? shouldn't matter, you're likely to set this value after binding
@@ -48,8 +48,13 @@
 	});
 
 	Object.defineProperty(Value.prototype, 'value', {
-		get: function(){ return this._value; },
-		set: function(val){ this._value = val; this.change(); }
+		get: function(){ 
+			return this._value; 
+		},
+		set: function(val){ 
+			this._value = val; 
+			this.change(); 
+		}
 	});
 
 	var aliasEvent = function(eventName){
@@ -58,21 +63,96 @@
 			else this.trigger(eventName);
 		};
 	};
+	/* Maybe this should be 'set'.  We shouldn't need to use these getters/setters for functions... those would be super methods.
+	If you're calling obj.set(3), it would set the value.  IF you call obj.set(fn), it adds as a cb.  */
 
 	['change'].forEach(function(v, i){
 		Value.prototype[v] = aliasEvent(v);
 	});
 
+	/*
+	config: {
+		obj: someObj,
+		pname: '$propName', // valueObj
+		name: 'propName', // get/setters
+		value: 'prop value'
+	}
+	*/
+	Value.install = function(config){
+		if (!config.pname)
+			config.pname = '$' + config.name;
+
+		config.obj[config.pname] = new Value({name: config.name, value: config.value});
+		Object.defineProperty(config.obj, config.name, {
+			get: function(){
+				return this[config.pname].value;
+			},
+			set: function(newValue){
+				this[config.pname].value = newValue;
+			}
+		});
+
+	};
+
+
+	var Property = MPL.Property = function Property(opts){
+		Value.install({
+			obj: this,
+			name: 'name'
+		});
+		/* this.$name = new Value({name: 'name', value: opts && opts.name})
+		Object.defineProperty(this, 'name', {
+			get: function(){
+				return this.$name.value;
+			},
+			set: function(newName){
+				this.$name.value = newName;
+			}
+		});*/
+		$.extend(this, opts);
+	};
+
+	Property.prototype = $.extend(Object.create(MPL.Value.prototype), {
+		constructor: Property,
+		$render: function(){
+			var $target = this.parent.$el.$props;
+			if (!this.$el){
+				this.$el = $('<div>').addClass('property');
+				this.$el.$name = $('<div>').css('display', 'inline-block').html(this.name).appendTo(this.$el);
+				this.$el.append(': ');
+				this.$name.bindTo(this.$el.$name);
+				this.$el.$value = $('<input>').val(this.value).appendTo(this.$el);
+				this.bindTo(this.$el.$value);
+			}
+			this.$el.appendTo($target);
+		}
+	});
+
+
+	Object.defineProperty(Property.prototype, 'name', {
+		get: function(){ 
+			return this._name; 
+		},
+		set: function(n){ 
+			this._name = n; 
+			this.rename(); 
+		}
+	});
+
+	['rename'].forEach(function(v){
+		Property.prototype[v] = aliasEvent(v);
+	});
+
 	$.fn.getValue = function(){
 		var $first = this.first();
-		return $first.html() || $first.val();
+		return $first.val() || $first.html();
 	};
 
 	$.fn.setValue = function(value){
 		return this.each(function(){
 			var $self = $(this);
 			$self.html(value);
-			if ($self.html() != value){
+			if ($self.html() != value || value === ''){
 				$self.val(value);
 				if ($self.val() != value){
 					console.log('Could not $().setValue()');
@@ -86,10 +166,10 @@
 			var $self = $(this),
 				oldValue = $self.getValue();
 
-			$self.on('keydown keyup change', function(){
+			$self.on('keydown', function(){
 				$el.setValue($self.getValue());
 			});
-			$el.on('keydown keyup change', function(){
+			$el.on('keydown', function(){
 				$self.setValue($el.getValue());
 			});
 			$el.setValue($self.getValue());
