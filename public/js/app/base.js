@@ -15,6 +15,71 @@ functional definitions that can install get/set and perform custom logic).
       Property = MPL.Property,
       Factories = MPL.Factories = {};
 
+MPL.extend = function() {
+  var srcObj, propName, targetValue, srcValue, copyIsArray, clone,
+    targetObj = arguments[0] || {},
+    i = 1,
+    length = arguments.length,
+    deep = false;
+
+  // Handle a deep copy situation
+  if ( typeof targetObj === "boolean" ) {
+    deep = targetObj;
+
+    // skip the boolean and the target
+    targetObj = arguments[ i ] || {};
+    i++;
+  }
+
+  // Handle case when target is a string or something (possible in deep copy)
+  if ( typeof targetObj !== "object" && !$.isFunction(targetObj) ) {
+    targetObj = {};
+  }
+
+  // extend jQuery itself if only one argument is passed
+  if ( i === length ) {
+    targetObj = this;
+    i--;
+  }
+
+  for ( ; i < length; i++ ) {
+    // Only deal with non-null/undefined values
+    if ( (srcObj = arguments[ i ]) != null ) {
+      // Extend the base object
+      for ( propName in srcObj ) {
+        targetValue = targetObj[ propName ];
+        srcValue = srcObj[ propName ];
+
+        // Prevent never-ending loop
+        if ( targetObj === srcValue ) {
+          continue;
+        }
+
+        // Recurse if we're merging plain objects or arrays
+        if ( deep && srcValue && ( jQuery.isPlainObject(srcValue) || (copyIsArray = jQuery.isArray(srcValue)) ) ) {
+          if ( copyIsArray ) {
+            copyIsArray = false;
+            clone = targetValue && jQuery.isArray(targetValue) ? targetValue : [];
+
+          } else {
+            clone = targetValue && jQuery.isPlainObject(targetValue) ? targetValue : {};
+          }
+
+          // Never move original objects, clone them
+          targetObj[ propName ] = jQuery.extend( deep, clone, srcValue );
+
+        // Don't bring in undefined values
+        } else if ( srcValue !== undefined ) {
+          targetObj[ propName ] = srcValue;
+        }
+      }
+    }
+  }
+
+  // Return the modified object
+  return targetObj;
+};
+
 var makeConstructor = function(name, parent){
   eval("var ret = function " + name + "(){ parent.apply(this, arguments); };");
   return ret;
@@ -23,7 +88,7 @@ var makeConstructor = function(name, parent){
 var extend = function(proto){
   var child, parent = this, name = proto && proto.factory ? proto.factory : "Child";
   child = proto && proto.hasOwnProperty('constructor') && proto.constructor || makeConstructor(name, parent);
-  child.prototype = $.extend(Object.create(parent.prototype), proto);
+  child.prototype = sextend(Object.create(parent.prototype), proto);
   child.prototype.constructor = child;
   child.parent = parent;
   child.extend = extend;
@@ -89,6 +154,11 @@ then wrap it in an oo wrapper:  this.do = fn(){ do.apply(this, arguments); }
 
       }
     }
+    return this;
+  };
+
+  var sextend = function(base, ext){
+    return doit.call(base, ext);
   };
 
   var Factory = MPL.Factory = function(proto){
@@ -112,7 +182,7 @@ then wrap it in an oo wrapper:  this.do = fn(){ do.apply(this, arguments); }
     factory.create = constructor;
     
     // prototype
-    if (!this.create){
+    if (!this.create && !proto.constructor){
       constructor.prototype = $.extend(
         Object.create(MPL.Events.prototype), 
         proto,

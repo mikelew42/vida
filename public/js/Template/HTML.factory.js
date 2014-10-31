@@ -51,11 +51,18 @@
 		parent: function(){
 			var parent = this.div();
 			var div = HTML({ parent: parent });
+		},
+		oneTwo: function(){
+			var One = HTML.factory({ classes: { append: 'factory-one' } } );
+			console.log('one', One({ classes: { append: 'instance-one' } } ));
+			var Two = One.factory({ classes: { append: 'factory-two' } } );
+			console.log('two', Two({ classes: { append: 'instance-two' } } ));
 		}
 	};
 	$(function(){
 		// HTML.tests.div();
-		HTML.tests.parent();
+		// HTML.tests.parent();
+		HTML.tests.oneTwo();
 		
 	})
 })(jQuery, MPL);
