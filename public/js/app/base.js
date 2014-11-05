@@ -110,6 +110,9 @@ then wrap it in an oo wrapper:  this.do = fn(){ do.apply(this, arguments); }
 - try to encapsulate each conditional block + step into separate fn as much as possible for readability
 - */
   var doit = function(o){
+    if (!o)
+      return false;
+
     // assume o is an object, later add support for an array of objects
     for (var i in o){
       if (typeof this[i] !== 'undefined'){
@@ -130,6 +133,7 @@ then wrap it in an oo wrapper:  this.do = fn(){ do.apply(this, arguments); }
           if (this[i].do)
             this[i].do(o[i]);
           else
+            // if o[i].override, then just set it
             $.extend(true, this[i], o[i]);
           // deep extend?
           // handling of arrays
@@ -161,14 +165,28 @@ then wrap it in an oo wrapper:  this.do = fn(){ do.apply(this, arguments); }
     return doit.call(base, ext);
   };
 
+  var makeNamedEmptyConstructor = function(name){
+
+  };
+  var getOwnConstructorOrMakeNewConstructorWithEvents = function(proto){
+    var constructor = proto && proto.hasOwnProperty('constructor') && proto.constructor || function(){};
+    
+    if (proto.events){ // note: this is rather destructive, in the case that you're passing ina  constructor that already has a prototype.
+      constructor.prototype = $.extend(
+        Object.create(MPL.Events.prototype), 
+        proto,
+        { constructor: constructor }
+      );
+    }
+
+    return constructor;
+  };
+
   var Factory = MPL.Factory = function(proto){
-    var constructor = this.create && this.create.extend(proto) || proto.constructor || function(){};
+    var constructor = this.create && this.create.extend(proto) || getOwnConstructorOrMakeNewConstructorWithEvents(proto);
     
     // constructor inheritance
     constructor.extend = extend;
-
-    // back reference
-    constructor.factory = factory;
 
     var factory = function(o){
       var obj = new factory.create(o);
@@ -176,19 +194,13 @@ then wrap it in an oo wrapper:  this.do = fn(){ do.apply(this, arguments); }
       return obj;
     };
 
+    // back reference
+    constructor.factory = factory;
+
     factory.factory = Factory;
 
     // constructor
     factory.create = constructor;
-    
-    // prototype
-    if (!this.create && !proto.constructor){
-      constructor.prototype = $.extend(
-        Object.create(MPL.Events.prototype), 
-        proto,
-        { constructor: constructor }
-      );
-    }
 
     // this allows the Factory to have events
     $.extend(factory, MPL.Events.prototype);
@@ -203,11 +215,33 @@ then wrap it in an oo wrapper:  this.do = fn(){ do.apply(this, arguments); }
     // 
   };
 
+  var Factory2 = MPL.Factory2 = function(o){
+    
+  };
+
 
   var Base = MPL.Base = Factory({
     factory: "Base",
+    events: true,
     do: doit,
     constructor: function Base(opts){
+      /*
+      // makeClass - By John Resig (MIT Licensed)
+      function makeClass(){
+        return function(args){
+          // if using new
+          if ( this instanceof arguments.callee ) {
+            // and init method exists
+            if ( typeof this.init == "function" )
+              // apply either the args or arguments, depending on whether the below was used
+                  // if below was used, args will already be arguments, and have property .callee
+              this.init.apply( this, args.callee ? args : arguments );
+          } else
+            // if not using new keyword, instantiate
+            return new arguments.callee( arguments );
+        };
+      }
+      */
       this.$_properties = {};
       if (this.initialize) this.initialize(opts);
     },

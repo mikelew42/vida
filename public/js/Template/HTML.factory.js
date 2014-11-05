@@ -5,12 +5,13 @@
 		tag: "div",
 		initialize: function(o){
 			//$.extend(this, o);
-			this.classes = Classes();
+			console.log(this.constructor.prototype.classes.items);
+			this.classes = this.constructor.prototype.classes.copy();
 			//this.classes.on('all', function(){
 			//	console.log('classes.all', arguments);
 			//});
-			this.attributes = Attributes();
-			this.contents = Contents();
+			this.attributes = Attributes({ el: this });
+			this.contents = Contents({ el: this });
 			this.do(o);
 			this.trigger('initialized');
 			// console.log('HTML.created');
@@ -37,6 +38,11 @@
 	var Attributes = MPL.HTML.Attributes = MPL.Collection.factory({ factory: "Attributes" });
 	var Contents = MPL.HTML.Contents = MPL.Collection.factory({ factory: "Contents" });
 
+	HTML.create.prototype.classes = Classes({ el: HTML.create.prototype });
+	HTML.create.prototype.attributes = Attributes({ el: HTML.create.prototype });
+	HTML.create.prototype.contents = Contents({ el: HTML.create.prototype });
+
+
 	window.HTML = HTML; // uncomment for testing
 
 	HTML.tests = {
@@ -54,7 +60,19 @@
 		},
 		oneTwo: function(){
 			var One = HTML.factory({ classes: { append: 'factory-one' } } );
+
+			/* 
+			Using the .factory method extends the .create constructor, which 
+			calls sextend on the prototype:
+				child.prototype = sextend(Object.create(parent.prototype), proto);
+
+			
+			*/
 			console.log('one', One({ classes: { append: 'instance-one' } } ));
+			/* To solve this problem, I could run the initialize fn on the prototype, 
+			so that when the .factory method sextends the prototype, the objects are available.  
+
+			Then, in the constructor, you'd have to copy the collection from prototype to instance. */
 			var Two = One.factory({ classes: { append: 'factory-two' } } );
 			console.log('two', Two({ classes: { append: 'instance-two' } } ));
 		}
