@@ -1,5 +1,7 @@
 ;(function($, MPL){
 	
+	MPL = MPL || {};
+
 	var Process = MPL.Process = MPL.Factory({
 		factory: "Process",
 		constructor: function CreateProcess(){
@@ -116,11 +118,52 @@
 		construct: function(){
 			var proc = Process();
 			console.log(proc);
+		},
+		subReplace: function(){
+
 		}
 	};
 
 	$(function(){
 		// Process.tests.construct();
+		Process.tests.subReplace();
+
 	});
 
-})(jQuery, MPL);
+
+	var testSyntax = function(){
+		var proc = Process(function(){
+			this.a();
+			this.b();
+			this.c();
+		}).sub('a', function(){
+			// do a
+		}).sub('b', function(){
+			this === proc;
+			this.a();
+			this.b();
+			this.c();
+		});
+
+		// or
+
+		// i think this would work, because existingProc, which targets itself.sub, should override these subs.
+		// but.. you couldn't create a new proc this way...
+		var proc = $.extend(Process(function(){}) || existingProc, { })
+
+
+		obj.method = function(){
+			this === obj;
+			this.method.sub();
+		};
+
+		// vs
+
+		obj.process = function(){
+			this === process;
+			this.sub();
+			this.parent || this.target === obj;
+		};
+	};
+
+})(jQuery);

@@ -2,49 +2,21 @@
 <html>
 <head>
 	<title>Debugger</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<script src="/js/jquery.js"></script>
-	<script src="/js/underscore.js"></script>
-	
-	<script src="/js/events.module.js"></script>
-	<script src="/js/value.js"></script>
-	<script src="/js/app/base.js"></script>
-	<script src="/js/Method/Method.js"></script>
-	<script src="/js/Method/Process.js"></script>
-	<script src="/js/Collection/Collection.factory.js"></script>
-	<script src="/js/Template/HTML.factory.js"></script>
-	<script src="/js/View/view.js"></script>
-	<script src="/js/app/app.js"></script>
-	<script src="/js/app/app.view.js"></script>
+	<script src="factory.js"></script>
+	<script src="templating.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 	<link href="styles.less" type="text/css" rel="stylesheet/less" />
-	<script src="obj.js"></script>
 	<script>
 	$(document).ready(function(){
 
-		var Obj = MPL.Obj;
-
-		// Obj.on('new', function(o){
-		// 	console.log('new Obj', o);
-		// })
-
-		// window.root = new Obj({name: 'Yo'});
-		// root.$render($('.items'));
-
-		// console.log(root);
-		// for (var i in root)
-		// 	console.log(i, root.hasOwnProperty(i), root[i]);
-
-		var app = MPL.App();
-		app.$prop('michael');
 
 	});
 	</script>
 	<style></style>
 	<script src="/js/less.js"></script>
-</head>
-<body>
-
-	<div class="items centered">
+	<script type="html/template" id="test">
 		<div class="item root light expandable">
 			<div class="preview">
 				<i class="fa fa-cubes"></i>
@@ -131,6 +103,18 @@
 				</div>
 			</div>
 		</div>
+	</script>
+</head>
+<body>
+
+	<div class="items centered">
+		<div class="item no-pad root light">
+				<i class="icon fa fa-cubes"></i><span class="name">Root Object</span>
+				<div class="right-side fr">
+					<span class="subtitle">object</span>
+					<i class="fa fa-gear btn"></i>
+				</div>
+			</div>
 	</div>
 </body>
 </html>

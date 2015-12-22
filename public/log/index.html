@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+<head>
+	<script src="/js/jquery.js"></script>
+	<style></style>
+	<script>
+	$(function(){
+		var logger = {
+			init: function(){
+				this.loggers = [];
+				return this;
+			},
+			/*
+			string --> message
+			string, value --> label:  value
+			object --> new group
+			*/
+			_log: function(arg){
+				
+			},
+			logObject: function(obj){
+
+			},
+			log: function(){
+				// allow for any number of log values (arguments)
+				for (var i = 0; i < arguments.length; i++)
+					this._log(arguments[i]);
+			},
+			add: function(logger){
+				this.loggers.push(logger);
+			},
+			render: function($appendTo){
+				var self = this;
+				this.$el = $('<div>').addClass('log-item');
+				this.$preview = $('<div>').addClass('preview');
+
+				if ($appendTo) this.$el.appendTo($appendTo);
+				
+				this.$preview.click(function(){
+					self.toggle();
+				});
+			},
+			renderView: function(){
+				this.$view = $('<div>').addClass('view');
+				
+				if (typeof this.value === 'object')
+					this.renderObject();
+
+				if (this.loggers.length)
+					this.renderLoggers();
+
+				this.renderedView = true;
+			},
+			renderLoggers: function(){
+				for (var i = 0; i < this.loggers.length; i++){
+					this.loggers[i].render(this.$view);
+				}
+			},
+			toggle: function(){
+				if (this.expanded)
+					this.collapse();
+				else
+					this.expand();
+			},
+			expand: function(){
+				if (!this.expanded){
+					if (!this.renderedView) this.renderView();
+					this.$view.slideDown(function(){
+						this.expanded = true;
+					});
+				}
+			},
+			collapse: function(){
+				if (this.expanded){
+					this.$view.slideUp(function(){
+						this.expanded = false;
+					});
+				}
+			}
+		};
+
+		var Logger = function(opts){
+			return $.extend({}, logger, opts).init();
+		};
+
+		var log = function(){
+			// just forward this call to the current logger.log
+		};
+
+		$.extend(log, {
+			group: $.extend(function(){
+
+			}, {
+
+			}),
+
+		});
+	});
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

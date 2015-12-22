@@ -171,6 +171,7 @@ then wrap it in an oo wrapper:  this.do = fn(){ do.apply(this, arguments); }
   var getOwnConstructorOrMakeNewConstructorWithEvents = function(proto){
     var constructor = proto && proto.hasOwnProperty('constructor') && proto.constructor || function(){};
     
+    // bleh:  this whole system fails w/o proto.events == true, b/c otherwise, proto never gets merged into constructor.prototype
     if (proto.events){ // note: this is rather destructive, in the case that you're passing ina  constructor that already has a prototype.
       constructor.prototype = $.extend(
         Object.create(MPL.Events.prototype), 

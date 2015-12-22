@@ -1,0 +1,150 @@
+body, input { font-family: Verdana; font-size: 14px; }
+
+.fr { float: right; }
+.fl { float: left; }
+
+.items { width: 320px; height: 480px; border: 10px solid #555; overflow: auto; }
+.items.centered { margin: 50px auto; }
+
+// Mixin itself
+.clearfix() {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+.clearfix {
+  .clearfix();
+}
+
+.item {
+@item-bg: #eee;
+@item-hover-bg: #e5e5e5;
+	.item-bg(){
+		background: @item-bg;
+	}
+	.item-hover-bg(){
+		background: @item-hover-bg;
+	}
+	margin-bottom: 5px; 
+	.item-bg();
+	overflow: hidden;
+	padding: 10px;
+	cursor: pointer;
+	&:hover {
+		.item-hover-bg();
+	}
+
+	.clearfix();
+	.std-pad() {
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+
+	&.no-pad {
+		padding: 0;
+	}
+	.icon {
+		padding-top:13px;
+		padding-bottom: 10px;
+		padding-left: 12px;
+		padding-right: 10px;
+		float: left;
+		width: 20px;
+		text-align: center;
+	}
+	.subtitle {
+		display: inline-block;
+		.std-pad();
+		font-size: 13px;
+		color: #aaa;
+		margin-right: 15px;
+	}
+	.btn {
+		.std-pad();
+		padding-top: 12px;
+		padding-left: 14px;
+		padding-right: 14px;
+		border-left: 1px solid #ddd;
+		cursor: pointer;
+	}
+	.btn:hover {
+		background: #ccc;
+	}
+	.name, .title {
+		display: inline-block;
+		.std-pad();
+	}
+
+	&.expandable {
+		cursor: auto;
+		&:hover {
+			.item-bg();
+		}
+		.preview {
+			cursor: pointer;
+			&:hover {
+				.item-hover-bg();
+			}
+		}
+		.view {
+			background: #eee;
+			padding: 10px 12px;
+			.clearfix();
+			width: 100%;
+		}
+	}
+	
+}
+
+.app {
+	height: 100%;
+}
+
+.properties {
+	padding: 8px 0px;
+	.item { margin: 5px 10px; }
+	border: 3px solid #eee;
+	border-top: none;
+}
+.property {
+	font-size: 12px;
+	padding: 2px 10px 5px;
+	margin-bottom: 2px;
+	.name {
+		font-weight: bold;
+	}
+	.type {
+		color: #aaa;
+	}
+	.value {
+		float: right;
+	}
+	.border { 
+		height: 1px;
+		margin-top: 4px;
+		background: #eee;
+		clear: both;
+	}
+
+	&.string {
+		.value {
+			color: #00006F;	
+		}
+	}
+	&.number {
+		.value {
+			color: #008400;	
+		}
+	}
+	&.boolean {
+		.value {
+			color: #840000;	
+		}
+	}
+}
